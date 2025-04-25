@@ -1,0 +1,19 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: my-app
+  namespace: argocd
+spec:
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: default
+  source:
+    repoURL: https://github.com/NehaSharma1795/Todo-Terraform-HA-EKS.git
+    targetRevision: HEAD
+    path: k8s-manifests  # Path where your Kubernetes manifests are stored
+  project: default
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+
