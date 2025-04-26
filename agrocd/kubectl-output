@@ -1,0 +1,76 @@
+CISCO+nehasha6@DESKTOP-9G9O537 MINGW64 ~
+$ vi application.yaml
+
+CISCO+nehasha6@DESKTOP-9G9O537 MINGW64 ~
+$ kubectl apply -f application.yaml -n argocd
+application.argoproj.io/todo-app configured
+
+CISCO+nehasha6@DESKTOP-9G9O537 MINGW64 ~
+$ kubectl get all  -n argocd
+NAME                                                    READY   STATUS    RESTARTS   AGE
+pod/argocd-application-controller-0                     1/1     Running   0          7h11m
+pod/argocd-applicationset-controller-57fb7756df-59mwk   1/1     Running   0          7h11m
+pod/argocd-dex-server-d97c46c5b-l285c                   1/1     Running   0          7h11m
+pod/argocd-notifications-controller-7c7c8fc644-pw7fq    1/1     Running   0          7h11m
+pod/argocd-redis-67996bf77b-6q24l                       1/1     Running   0          7h11m
+pod/argocd-repo-server-5c786d98f7-8rg6n                 1/1     Running   0          7h11m
+pod/argocd-server-75487f9dcd-2rflz                      1/1     Running   0          7h11m
+
+NAME                                       TYPE           CLUSTER-IP       EXTERNAL-IP                                                              PORT(S)
+     AGE
+service/argocd-applicationset-controller   ClusterIP      172.20.131.150   <none>                                                                   7000/TCP
+     7h11m
+service/argocd-dex-server                  ClusterIP      172.20.117.37    <none>                                                                   5556/TCP,5557/TCP            7h11m
+service/argocd-redis                       ClusterIP      172.20.103.148   <none>                                                                   6379/TCP
+     7h11m
+service/argocd-repo-server                 ClusterIP      172.20.174.113   <none>                                                                   8081/TCP
+     7h11m
+service/argocd-server                      LoadBalancer   172.20.123.46    a9de8e3aa02754551898694a038b9d0d-793999007.us-east-1.elb.amazonaws.com   80:32294/TCP,443:32352/TCP   7h11m
+
+NAME                                               READY   UP-TO-DATE   AVAILABLE   AGE
+deployment.apps/argocd-applicationset-controller   1/1     1            1           7h11m
+deployment.apps/argocd-dex-server                  1/1     1            1           7h11m
+deployment.apps/argocd-notifications-controller    1/1     1            1           7h11m
+deployment.apps/argocd-redis                       1/1     1            1           7h11m
+deployment.apps/argocd-repo-server                 1/1     1            1           7h11m
+deployment.apps/argocd-server                      1/1     1            1           7h11m
+
+NAME                                                          DESIRED   CURRENT   READY   AGE
+replicaset.apps/argocd-applicationset-controller-57fb7756df   1         1         1       7h11m
+replicaset.apps/argocd-dex-server-d97c46c5b                   1         1         1       7h11m
+replicaset.apps/argocd-notifications-controller-7c7c8fc644    1         1         1       7h11m
+replicaset.apps/argocd-redis-67996bf77b                       1         1         1       7h11m
+replicaset.apps/argocd-repo-server-5c786d98f7                 1         1         1       7h11m
+replicaset.apps/argocd-server-75487f9dcd                      1         1         1       7h11m
+
+NAME                                             READY   AGE
+statefulset.apps/argocd-application-controller   1/1     7h11m
+
+CISCO+nehasha6@DESKTOP-9G9O537 MINGW64 ~
+$
+
+CISCO+nehasha6@DESKTOP-9G9O537 MINGW64 ~
+$ kubectl get all
+NAME                                       READY   STATUS    RESTARTS   AGE
+pod/backend-deployment-868d466457-p9pzj    1/1     Running   0          6m24s
+pod/backend-deployment-868d466457-r9mf9    1/1     Running   0          6m24s
+pod/frontend-deployment-6b47f69cfb-8drcg   1/1     Running   0          6m24s
+pod/frontend-deployment-6b47f69cfb-zwbbx   1/1     Running   0          6m24s
+
+NAME                       TYPE           CLUSTER-IP       EXTERNAL-IP                                                              PORT(S)          AGE
+service/backend-service    ClusterIP      172.20.150.133   <none>                                                                   8000/TCP         6m24s
+service/frontend-service   LoadBalancer   172.20.74.93     ac9834735887a4996842d732aff9721b-640816366.us-east-1.elb.amazonaws.com   3000:31571/TCP   6m24s
+service/kubernetes         ClusterIP      172.20.0.1       <none>                                                                   443/TCP          7h17m
+
+NAME                                  READY   UP-TO-DATE   AVAILABLE   AGE
+deployment.apps/backend-deployment    2/2     2            2           6m25s
+deployment.apps/frontend-deployment   2/2     2            2           6m25s
+
+NAME                                             DESIRED   CURRENT   READY   AGE
+replicaset.apps/backend-deployment-868d466457    2         2         2       6m25s
+replicaset.apps/frontend-deployment-6b47f69cfb   2         2         2       6m25s
+
+CISCO+nehasha6@DESKTOP-9G9O537 MINGW64 ~
+$ ^C
+
+CISCO+nehasha6@DESKTOP-9G9O537 MINGW64 ~
