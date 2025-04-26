@@ -85,4 +85,28 @@ kube-system       Active   9m
 CISCO+nehasha6@DESKTOP-9G9O537 MINGW64 ~
 
 
+#4****
+Final recommended .gitignore for you:
+Create a .gitignore in your project root (if not there), and add:
+
+# Ignore Terraform system files
+.terraform/
+*.tfstate
+*.tfstate.backup
+crash.log
+*.log
+
+# Ignore Terraform provider binaries
+*.exe
+*.zip
+*.tar.gz
+⚡ Simple steps to fix your problem:
+
+git rm -r --cached Buddy-wise-infra/.terraform/
+echo ".terraform/" >> .gitignore
+git add .gitignore
+git commit -m "Ignore .terraform folder and provider binaries"
+git push origin main
+
+
 
