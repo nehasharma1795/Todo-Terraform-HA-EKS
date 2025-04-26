@@ -83,6 +83,7 @@ kube-public       Active   8m59s
 kube-system       Active   9m
 
 CISCO+nehasha6@DESKTOP-9G9O537 MINGW64 ~
+ kubectl -n argocd get secret argocd-initial-admin-secret -o jsonpath='{.data.password}' | base64 --decode; echo
 
 
 #4****
