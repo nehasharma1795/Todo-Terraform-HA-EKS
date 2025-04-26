@@ -1,4 +1,4 @@
-Git Push Issue 
+#1************Git Push Issue 
 root@ip-172-31-86-13:/git-setup# git push origin master
 error: src refspec master does not match any
 error: failed to push some refs to 'github.com:nehasharma1795/Todo-Terraform-HA-EKS.git'
@@ -32,11 +32,57 @@ root@ip-172-31-86-13:/git-setup#
 
 
 
-
+#2*******************
 git branch
 git fetch
 git branch -r
 git checkout main
 git push origin main
+
+#3*******************
+
+CISCO+nehasha6@DESKTOP-9G9O537 MINGW64 ~
+$ kubectl get all -n argocd
+Unable to connect to the server: dial tcp: lookup C3269218DB9C63013013EB0689907448.gr7.us-east-1.eks.amazonaws.com: no such host
+Unable to connect to the server: dial tcp: lookup C3269218DB9C63013013EB0689907448.gr7.us-east-1.eks.amazonaws.com: no such host
+Unable to connect to the server: dial tcp: lookup C3269218DB9C63013013EB0689907448.gr7.us-east-1.eks.amazonaws.com: no such host
+Unable to connect to the server: dial tcp: lookup C3269218DB9C63013013EB0689907448.gr7.us-east-1.eks.amazonaws.com: no such host
+Unable to connect to the server: dial tcp: lookup C3269218DB9C63013013EB0689907448.gr7.us-east-1.eks.amazonaws.com: no such host
+Unable to connect to the server: dial tcp: lookup C3269218DB9C63013013EB0689907448.gr7.us-east-1.eks.amazonaws.com: no such host
+Unable to connect to the server: dial tcp: lookup C3269218DB9C63013013EB0689907448.gr7.us-east-1.eks.amazonaws.com: no such host
+Unable to connect to the server: dial tcp: lookup C3269218DB9C63013013EB0689907448.gr7.us-east-1.eks.amazonaws.com: no such host
+Unable to connect to the server: dial tcp: lookup C3269218DB9C63013013EB0689907448.gr7.us-east-1.eks.amazonaws.com: no such host
+Unable to connect to the server: dial tcp: lookup C3269218DB9C63013013EB0689907448.gr7.us-east-1.eks.amazonaws.com: no such host
+
+CISCO+nehasha6@DESKTOP-9G9O537 MINGW64 ~
+$ kubectl get ns
+Unable to connect to the server: dial tcp: lookup C3269218DB9C63013013EB0689907448.gr7.us-east-1.eks.amazonaws.com: no such host
+
+CISCO+nehasha6@DESKTOP-9G9O537 MINGW64 ~
+$ aws configure
+AWS Access Key ID [****************7SM3]:
+AWS Secret Access Key [****************x2Jv]:
+Default region name [us-east-1]:
+Default output format [None]:
+
+CISCO+nehasha6@DESKTOP-9G9O537 MINGW64 ~
+$ kubectl get ns
+Unable to connect to the server: dial tcp: lookup C3269218DB9C63013013EB0689907448.gr7.us-east-1.eks.amazonaws.com: no such host
+
+CISCO+nehasha6@DESKTOP-9G9O537 MINGW64 ~
+$ aws eks update-kubeconfig --name my-eks-cluster --region us-east-1
+Updated context arn:aws:eks:us-east-1:239044943724:cluster/my-eks-cluster in C:\Users\nehasha6\.kube\config
+
+CISCO+nehasha6@DESKTOP-9G9O537 MINGW64 ~
+$ kubectl get ns
+NAME              STATUS   AGE
+argocd            Active   4m1s
+default           Active   8m59s
+kube-node-lease   Active   8m59s
+kube-public       Active   8m59s
+kube-system       Active   9m
+
+CISCO+nehasha6@DESKTOP-9G9O537 MINGW64 ~
+
 
 
