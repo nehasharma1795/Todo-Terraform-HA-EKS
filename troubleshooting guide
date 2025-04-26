@@ -110,4 +110,36 @@ git commit -m "Ignore .terraform folder and provider binaries"
 git push origin main
 
 
+5#******kubectl*****************
+
+CISCO+nehasha6@DESKTOP-9G9O537 MINGW64 ~
+$ kubectl version --client
+Client Version: v1.30.1
+Kustomize Version: v5.0.4-0.20230601165947-6ce0bf390ce3
+
+CISCO+nehasha6@DESKTOP-9G9O537 MINGW64 ~
+$ aws configure
+bash: aws: command not found
+
+CISCO+nehasha6@DESKTOP-9G9O537 MINGW64 ~
+$ PATH=$PATH:/c/Program\ Files/Amazon/AWSCLIV2
+
+CISCO+nehasha6@DESKTOP-9G9O537 MINGW64 ~
+$ aws configure
+AWS Access Key ID [****************7SM3]: AKIATPKBQL5WPY5L7SM3
+AWS Secret Access Key [****************x2Jv]:
+Default region name [us-east-1]:
+Default output format [None]:
+
+CISCO+nehasha6@DESKTOP-9G9O537 MINGW64 ~
+$ aws configure
+AWS Access Key ID [****************7SM3]:
+
+
+CISCO+nehasha6@DESKTOP-9G9O537 MINGW64 ~
+$ kubectl get nodes
+NAME                         STATUS   ROLES    AGE     VERSION
+
+
+
 
