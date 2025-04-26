@@ -30,3 +30,13 @@ root@ip-172-31-86-13:/git-setup# git branch
 root@ip-172-31-86-13:/git-setup# 
 
 
+
+
+
+git branch
+git fetch
+git branch -r
+git checkout main
+git push origin main
+
+
