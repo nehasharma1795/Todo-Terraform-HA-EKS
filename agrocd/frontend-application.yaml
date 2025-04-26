@@ -1,18 +1,21 @@
-apiVersion: argoproj.io/v1alpha1
-kind: Application
+apiVersion: apps/v1
+kind: Deployment
 metadata:
-  name: frontend-app
-  namespace: argocd   # Very important: ArgoCD watches its own namespace
+  name: frontend-deployment
+  labels:
+    app: frontend
 spec:
-  project: default
-  source:
-    repoURL: 'https://github.com/NehaSharma1795/my-fullstack-app'  # your repo
-    targetRevision: HEAD  # latest code
-    path: frontend        # folder where YAML files are
-  destination:
-    server: 'https://kubernetes.default.svc'  # EKS internal address
-    namespace: default  # where you want to deploy app
-  syncPolicy:
-    automated:
-      prune: true
-      selfHeal: true
+  replicas: 2
+  selector:
+    matchLabels:
+      app: frontend
+  template:
+    metadata:
+      labels:
+        app: frontend
+    spec:
+      containers:
+      - name: frontend
+        image: <your-frontend-ecr-image>:latest
+        ports:
+        - containerPort: 3000
