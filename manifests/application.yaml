@@ -4,7 +4,7 @@ metadata:
   name: todo-app  # Name of your ArgoCD application
 spec:
   destination:
-    name: 'aws.eks.my-eks-cluster.amazonaws.com'  # Replace with your EKS cluster name
+    name: 'my-eks-cluster'  # Replace with your EKS cluster name
     namespace: default  # Namespace where the app will be deployed in EKS
   source:
     repoURL: 'https://github.com/nehasharma1795/Todo-Terraform-HA-EKS.git'  # Replace with your repository URL
