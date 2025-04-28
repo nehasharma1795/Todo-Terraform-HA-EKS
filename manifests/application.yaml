@@ -1,18 +1,18 @@
 apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
-  name: todo-app  # Name of your ArgoCD application
+  name: my-apps
+  namespace: argocd
 spec:
-  destination:
-    name: 'my-eks-cluster'  # Replace with your EKS cluster name
-    namespace: default  # Namespace where the app will be deployed in EKS
+  project: default
   source:
-    repoURL: 'https://github.com/nehasharma1795/Todo-Terraform-HA-EKS.git'  # Replace with your repository URL
-    path: 'manifests/'  # Path to the directory where your Kubernetes manifests are stored
-    targetRevision: HEAD  # Use HEAD for the latest commit, or specify a branch/tag
-  project: default  # Optional: Define which ArgoCD project to use (usually 'default')
+    repoURL: https://github.com/nehasharma1795/Todo-Terraform-HA-EKS.git
+    targetRevision: HEAD
+    path: manifests
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: default
   syncPolicy:
     automated:
-      prune: true  # Automatically prune resources that are no longer in the repository
-      selfHeal: true  # Automatically heal the application in case of drift
-
+      prune: true
+      selfHeal: true
