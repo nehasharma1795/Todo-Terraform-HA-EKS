@@ -140,6 +140,9 @@ CISCO+nehasha6@DESKTOP-9G9O537 MINGW64 ~
 $ kubectl get nodes
 NAME                         STATUS   ROLES    AGE     VERSION
 
+#######more issue to getting oidc provider
 
+export AWS_PAGER=""
+aws eks describe-cluster --name my-eks-cluster --region ap-south-1 --query "cluster.identity.oidc.issuer" --output text
 
 
