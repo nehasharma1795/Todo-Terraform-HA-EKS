@@ -32,7 +32,7 @@ jobs:
         id: terraform_outputs
         run: |
           terraform init
-          terraform apply -auto-approve -var="db_password=${{ secrets.DB_PASSWORD }}"
+          terraform apply -auto-approve -var="db_password=${{ secrets.DB_PASSWORD }}" -var="db_username=${{ secrets.DB_USERNAME }}"
           echo "AWS_ACCOUNT_ID=$(terraform output -raw aws_account_id)" >> $GITHUB_ENV
           echo "AWS_REGION=$(terraform output -raw aws_region)" >> $GITHUB_ENV
           echo "ECR_BACKEND_NAME=$(terraform output -raw ecr_backend_name)" >> $GITHUB_ENV
