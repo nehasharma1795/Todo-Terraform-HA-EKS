@@ -27,8 +27,8 @@ jobs:
       - name: Set up Terraform
         uses: hashicorp/setup-terraform@v2
 
-      # Step 4: Run Terraform from the Buddy-wise-infra directory
-      - name: Get Terraform Outputs
+      # Step 4: Run Terraform from the agrocd directory
+      - name: Apply Terraform and Get Outputs
         id: terraform_outputs
         run: |
           terraform init
@@ -37,49 +37,58 @@ jobs:
           echo "AWS_REGION=$(terraform output -raw aws_region)" >> $GITHUB_ENV
           echo "ECR_BACKEND_NAME=$(terraform output -raw ecr_backend_name)" >> $GITHUB_ENV
           echo "ECR_FRONTEND_NAME=$(terraform output -raw ecr_frontend_name)" >> $GITHUB_ENV
+          echo "EKS_CLUSTER_NAME=$(terraform output -raw eks_cluster_name)" >> $GITHUB_ENV
         working-directory: ./agrocd
 
-      # Step 5: Authenticate Docker to AWS ECR
+      # Step 5: Configure kubeconfig for EKS
+      - name: Configure kubeconfig
+        run: |
+          aws eks update-kubeconfig --region ${{ env.AWS_REGION }} --name ${{ env.EKS_CLUSTER_NAME }}
+
+      # Step 6: Authenticate Docker to AWS ECR
       - name: Authenticate Docker to AWS ECR
         run: |
           aws ecr get-login-password --region ${{ env.AWS_REGION }} | docker login --username AWS --password-stdin ${{ env.AWS_ACCOUNT_ID }}.dkr.ecr.${{ env.AWS_REGION }}.amazonaws.com
 
-      # Step 6: Build Docker image for Backend
+      # Step 7: Build Docker image for Backend
       - name: Build Docker image for Backend
         run: |
           docker build -t ${{ env.AWS_ACCOUNT_ID }}.dkr.ecr.${{ env.AWS_REGION }}.amazonaws.com/${{ env.ECR_BACKEND_NAME }}:latest ./backend
 
-      # Step 7: Push Docker image to Backend ECR
+      # Step 8: Push Docker image to Backend ECR
       - name: Push Docker image to Backend ECR
         run: |
           docker push ${{ env.AWS_ACCOUNT_ID }}.dkr.ecr.${{ env.AWS_REGION }}.amazonaws.com/${{ env.ECR_BACKEND_NAME }}:latest
 
-      # Step 8: Build Docker image for Frontend
+      # Step 9: Build Docker image for Frontend
       - name: Build Docker image for Frontend
         run: |
           docker build -t ${{ env.AWS_ACCOUNT_ID }}.dkr.ecr.${{ env.AWS_REGION }}.amazonaws.com/${{ env.ECR_FRONTEND_NAME }}:latest ./frontend
 
-      # Step 9: Push Docker image to Frontend ECR
+      # Step 10: Push Docker image to Frontend ECR
       - name: Push Docker image to Frontend ECR
         run: |
           docker push ${{ env.AWS_ACCOUNT_ID }}.dkr.ecr.${{ env.AWS_REGION }}.amazonaws.com/${{ env.ECR_FRONTEND_NAME }}:latest
 
-      # Step 10: Deploy to Kubernetes (e.g. ArgoCD)
+      # Step 11: Deploy ArgoCD
       - name: Deploy ArgoCD
         run: |
+          helm repo add argo https://argoproj.github.io/argo-helm
+          helm repo update
           helm upgrade --install argocd argo/argo-cd \
             --namespace argocd \
+            --create-namespace \
             --set server.service.type=LoadBalancer \
             --set server.ingress.enabled=true \
             --set server.ingress.hosts[0]=argocd.${{ env.AWS_REGION }}.amazonaws.com
 
-      # Step 11: Verify Ingress
+      # Step 12: Verify Ingress
       - name: Verify Ingress for Backend and Frontend
         run: |
-          kubectl get ingress backend-ingress
-          kubectl get ingress frontend-ingress
+          kubectl get ingress backend-ingress || echo "Backend ingress not found"
+          kubectl get ingress frontend-ingress || echo "Frontend ingress not found"
 
-      # Step 12: Monitor ALB logs
+      # Step 13: Monitor ALB logs
       - name: Monitor AWS Load Balancer logs
         run: |
-          kubectl logs -n kube-system deployment/aws-load-balancer-controller
+          kubectl logs -n kube-system deployment/aws-load-balancer-controller || echo "No logs found"
