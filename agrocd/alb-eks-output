@@ -1,0 +1,33 @@
+CISCO+nehasha6@DESKTOP-9G9O537 MINGW64 ~/Downloads/terraform setup/todo-buddywise-Infra-setup/Buddy-wise-infra (main)
+$ ./alb-full-automation.sh
+Using OIDC Provider: oidc.eks.ap-south-1.amazonaws.com/id/AE0D38CB407E41CC69E8EAB263E9E713
+Using VPC ID: vpc-0258d63909fc856dc
+IAM policy AWSLoadBalancerControllerIAMPolicy already exists. Skipping creation.
+IAM Role AmazonEKSLoadBalancerControllerRole already exists.
+Attaching IAM policy to the role...
+serviceaccount/aws-load-balancer-controller unchanged
+"eks" already exists with the same configuration, skipping
+Hang tight while we grab the latest from your chart repositories...
+...Successfully got an update from the "eks" chart repository
+Update Complete. ⎈Happy Helming!⎈
+Release "aws-load-balancer-controller" has been upgraded. Happy Helming!
+NAME: aws-load-balancer-controller
+LAST DEPLOYED: Thu May  1 16:42:54 2025
+NAMESPACE: kube-system
+STATUS: deployed
+REVISION: 2
+TEST SUITE: None
+NOTES:
+AWS Load Balancer controller installed!
+NAME                           READY   UP-TO-DATE   AVAILABLE   AGE
+aws-load-balancer-controller   2/2     2            2           78s
+✅ ALB Controller setup complete.
+ℹ️ You can now deploy your frontend/backend apps with Ingress resources to expose them.
+
+CISCO+nehasha6@DESKTOP-9G9O537 MINGW64 ~/Downloads/terraform setup/todo-buddywise-Infra-setup/Buddy-wise-infra (main)
+$ kubectl get pods -n kube-system | grep aws-load-balancer-controller
+aws-load-balancer-controller-764cc7dc64-97qws   1/1     Running   0          82s
+aws-load-balancer-controller-764cc7dc64-crwlf   1/1     Running   0          82s
+
+CISCO+nehasha6@DESKTOP-9G9O537 MINGW64 ~/Downloads/terraform setup/todo-buddywise-Infra-setup/Buddy-wise-infra (main)
+$
