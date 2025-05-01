@@ -1,14 +1,17 @@
 resource "aws_iam_policy" "alb_controller_policy" {
-  name        = "ALBControllerIAMPolicy"
+  name        = "AWSLoadBalancerControllerIAMPolicy"
+  path        = "/"
   description = "IAM policy for AWS Load Balancer Controller"
-  
+
   policy = jsonencode({
-    Version = "2012-10-17"
+    Version = "2012-10-17",
     Statement = [
       {
-        Effect = "Allow"
-        Action = ["iam:CreateServiceLinkedRole"]
-        Resource = "*"
+        Effect = "Allow",
+        Action = [
+          "iam:CreateServiceLinkedRole"
+        ],
+        Resource = "*",
         Condition = {
           StringEquals = {
             "iam:AWSServiceName" = "elasticloadbalancing.amazonaws.com"
@@ -16,7 +19,7 @@ resource "aws_iam_policy" "alb_controller_policy" {
         }
       },
       {
-        Effect = "Allow"
+        Effect = "Allow",
         Action = [
           "ec2:DescribeAccountAttributes",
           "ec2:DescribeAddresses",
@@ -34,24 +37,12 @@ resource "aws_iam_policy" "alb_controller_policy" {
           "ec2:GetSecurityGroupsForVpc",
           "ec2:DescribeIpamPools",
           "ec2:DescribeRouteTables",
-          "elasticloadbalancing:DescribeLoadBalancers",
-          "elasticloadbalancing:DescribeLoadBalancerAttributes",
-          "elasticloadbalancing:DescribeListeners",
-          "elasticloadbalancing:DescribeListenerCertificates",
-          "elasticloadbalancing:DescribeSSLPolicies",
-          "elasticloadbalancing:DescribeRules",
-          "elasticloadbalancing:DescribeTargetGroups",
-          "elasticloadbalancing:DescribeTargetGroupAttributes",
-          "elasticloadbalancing:DescribeTargetHealth",
-          "elasticloadbalancing:DescribeTags",
-          "elasticloadbalancing:DescribeTrustStores",
-          "elasticloadbalancing:DescribeListenerAttributes",
-          "elasticloadbalancing:DescribeCapacityReservation"
-        ]
+          "elasticloadbalancing:Describe*"
+        ],
         Resource = "*"
       },
       {
-        Effect = "Allow"
+        Effect = "Allow",
         Action = [
           "cognito-idp:DescribeUserPoolClient",
           "acm:ListCertificates",
@@ -70,13 +61,28 @@ resource "aws_iam_policy" "alb_controller_policy" {
           "shield:DescribeProtection",
           "shield:CreateProtection",
           "shield:DeleteProtection"
-        ]
+        ],
         Resource = "*"
       },
       {
-        Effect = "Allow"
+        Effect = "Allow",
         Action = [
           "ec2:AuthorizeSecurityGroupIngress",
-          "ec2:RevokeSecurityGroupIngress"
-        ]
-        Resource =
+          "ec2:RevokeSecurityGroupIngress",
+          "ec2:CreateSecurityGroup",
+          "ec2:CreateTags",
+          "ec2:DeleteTags",
+          "ec2:DeleteSecurityGroup"
+        ],
+        Resource = "*"
+      },
+      {
+        Effect = "Allow",
+        Action = [
+          "elasticloadbalancing:*"
+        ],
+        Resource = "*"
+      }
+    ]
+  })
+}
