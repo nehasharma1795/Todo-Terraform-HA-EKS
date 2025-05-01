@@ -37,7 +37,7 @@ jobs:
           echo "AWS_REGION=$(terraform output -raw aws_region)" >> $GITHUB_ENV
           echo "ECR_BACKEND_NAME=$(terraform output -raw ecr_backend_name)" >> $GITHUB_ENV
           echo "ECR_FRONTEND_NAME=$(terraform output -raw ecr_frontend_name)" >> $GITHUB_ENV
-        working-directory: ./Todo-Terraform-HA-EKS/agrocd/main/
+        working-directory: ./agrocd/main/
 
       # Step 5: Authenticate Docker to AWS ECR
       - name: Authenticate Docker to AWS ECR
