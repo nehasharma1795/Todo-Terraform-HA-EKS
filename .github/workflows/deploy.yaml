@@ -86,10 +86,3 @@ jobs:
         run: |
           kubectl logs -n kube-system deployment/aws-load-balancer-controller
           
-      # Step 13: Notify (example - Slack notification, optional)
-      - name: Send deployment success notification (optional)
-        uses: slackapi/slack-github-action@v1.0.0
-        with:
-          slack-token: ${{ secrets.SLACK_TOKEN }}
-          channel: '#deployments'
-          text: "Deployment to AWS ECR and Kubernetes has been successfully completed!"
