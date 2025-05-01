@@ -23,49 +23,73 @@ jobs:
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           aws-region: ${{ secrets.AWS_REGION }}
 
-      # Step 3: Authenticate Docker to AWS ECR
-      - name: Authenticate Docker to AWS ECR
+      # Step 3: Initialize Terraform and retrieve outputs (AWS Account ID, Region, ECR names)
+      - name: Get Terraform Outputs
+        id: terraform_outputs
         run: |
-          aws ecr get-login-password --region ${{ secrets.AWS_REGION }} | docker login --username AWS --password-stdin ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.${{ secrets.AWS_REGION }}.amazonaws.com
+          terraform init
+          terraform apply -auto-approve
+          echo "AWS_ACCOUNT_ID=$(terraform output -raw aws_account_id)" >> $GITHUB_ENV
+          echo "AWS_REGION=$(terraform output -raw aws_region)" >> $GITHUB_ENV
+          echo "ECR_BACKEND_NAME=$(terraform output -raw ecr_backend_name)" >> $GITHUB_ENV
+          echo "ECR_FRONTEND_NAME=$(terraform output -raw ecr_frontend_name)" >> $GITHUB_ENV
 
-      # Step 4: Set repository names from Terraform outputs (Backend and Frontend)
+      # Step 4: (Optional) Set repository names explicitly from Terraform outputs (Backend and Frontend)
       - name: Set ECR repository names
         id: set_repo_names
         run: |
-          echo "ECR_BACKEND_NAME=${{ secrets.ECR_BACKEND_NAME }}" >> $GITHUB_ENV
-          echo "ECR_FRONTEND_NAME=${{ secrets.ECR_FRONTEND_NAME }}" >> $GITHUB_ENV
+          echo "ECR_BACKEND_NAME=${{ env.ECR_BACKEND_NAME }}" >> $GITHUB_ENV
+          echo "ECR_FRONTEND_NAME=${{ env.ECR_FRONTEND_NAME }}" >> $GITHUB_ENV
 
-      # Step 5: Build Docker image for Backend
+      # Step 5: Authenticate Docker to AWS ECR
+      - name: Authenticate Docker to AWS ECR
+        run: |
+          aws ecr get-login-password --region ${{ env.AWS_REGION }} | docker login --username AWS --password-stdin ${{ env.AWS_ACCOUNT_ID }}.dkr.ecr.${{ env.AWS_REGION }}.amazonaws.com
+
+      # Step 6: Build Docker image for Backend
       - name: Build Docker image for Backend
         run: |
-          docker build -t ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.${{ secrets.AWS_REGION }}.amazonaws.com/${{ secrets.ECR_BACKEND_NAME }}:latest .
+          docker build -t ${{ env.AWS_ACCOUNT_ID }}.dkr.ecr.${{ env.AWS_REGION }}.amazonaws.com/${{ env.ECR_BACKEND_NAME }}:latest .
 
-      # Step 6: Push Docker image to Backend ECR
+      # Step 7: Push Docker image to Backend ECR
       - name: Push Docker image to Backend ECR
         run: |
-          docker push ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.${{ secrets.AWS_REGION }}.amazonaws.com/${{ secrets.ECR_BACKEND_NAME }}:latest
+          docker push ${{ env.AWS_ACCOUNT_ID }}.dkr.ecr.${{ env.AWS_REGION }}.amazonaws.com/${{ env.ECR_BACKEND_NAME }}:latest
 
-      # Step 7: Build Docker image for Frontend
+      # Step 8: Build Docker image for Frontend
       - name: Build Docker image for Frontend
         run: |
-          docker build -t ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.${{ secrets.AWS_REGION }}.amazonaws.com/${{ secrets.ECR_FRONTEND_NAME }}:latest .
+          docker build -t ${{ env.AWS_ACCOUNT_ID }}.dkr.ecr.${{ env.AWS_REGION }}.amazonaws.com/${{ env.ECR_FRONTEND_NAME }}:latest .
 
-      # Step 8: Push Docker image to Frontend ECR
+      # Step 9: Push Docker image to Frontend ECR
       - name: Push Docker image to Frontend ECR
         run: |
-          docker push ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.${{ secrets.AWS_REGION }}.amazonaws.com/${{ secrets.ECR_FRONTEND_NAME }}:latest
+          docker push ${{ env.AWS_ACCOUNT_ID }}.dkr.ecr.${{ env.AWS_REGION }}.amazonaws.com/${{ env.ECR_FRONTEND_NAME }}:latest
 
-      # Step 9: Deploy to Kubernetes (Example - Helm upgrade for ArgoCD)
+      # Step 10: Deploy to Kubernetes (Example - Helm upgrade for ArgoCD)
       - name: Deploy ArgoCD (example using Helm)
         run: |
           helm upgrade --install argocd argo/argo-cd \
             --namespace argocd \
             --set server.service.type=LoadBalancer \
             --set server.ingress.enabled=true \
-            --set server.ingress.hosts[0]=argocd.${{ secrets.AWS_REGION }}.amazonaws.com
+            --set server.ingress.hosts[0]=argocd.${{ env.AWS_REGION }}.amazonaws.com
 
-      # Step 10: Verify Ingress for Backend and Frontend
+      # Step 11: Verify Ingress for Backend and Frontend
       - name: Verify Ingress for Backend and Frontend
         run: |
           kubectl get ingress backend-ingress
-          kubectl get ingress frontend-ingress    
+          kubectl get ingress frontend-ingress
+          
+      # Step 12: Monitor ALB logs (optional)
+      - name: Monitor AWS Load Balancer Controller logs (optional)
+        run: |
+          kubectl logs -n kube-system deployment/aws-load-balancer-controller
+          
+      # Step 13: Notify (example - Slack notification, optional)
+      - name: Send deployment success notification (optional)
+        uses: slackapi/slack-github-action@v1.0.0
+        with:
+          slack-token: ${{ secrets.SLACK_TOKEN }}
+          channel: '#deployments'
+          text: "Deployment to AWS ECR and Kubernetes has been successfully completed!"
