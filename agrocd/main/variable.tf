@@ -34,6 +34,12 @@ variable "az2" {
   default = "ap-south-1b"
 }
 
+variable "db_password" {
+  description = "The database master password"
+  type        = string
+  sensitive   = true  # mark it as sensitive so it doesn't get logged
+}
+
 variable "ecr_backend_name" {
   description = "ECR repository name for backend"
   default     = "buddywise-backend"
