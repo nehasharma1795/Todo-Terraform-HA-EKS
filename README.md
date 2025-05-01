@@ -8,14 +8,13 @@
 3. **Docker Image Build**  
 4. **Docker Image Push to ECR**  
 5. **CD - Auto Deploy to EKS** (ArgoCD via GitOps)  
-6. **Infrastructure Provisioning** (VPC, Subnets etc.) — *Manually described, can be Terraform-ized*  
+6. **Infrastructure Provisioning** (VPC, Subnets etc.)
 7. **TLS/SSL Security** via ALB  
-8. **Secrets Management** — *Partially, GitHub Secrets only*  
-9. **Kubernetes YAML Manifests** — Described via ArgoCD apps  
-10. **Observability (Logging + Monitoring)** via CloudWatch + Grafana  
-11. **Security** — WAF, Shield, SG, RBAC, etc.  
-12. ⚠️ **Alerts/Notifications** — ❌ Not covered (Missing CloudWatch Alarms or SNS)  
-13. ♻️ **Auto Scaling** for Frontend/Backend  
+8. **Kubernetes YAML Manifests** — Described via ArgoCD apps  
+9. **Observability (Logging + Monitoring)** via CloudWatch + Grafana  
+10. **Security** — WAF, SG, RBAC, etc.  
+11. ⚠️ **Alerts/Notifications** — ❌ Not covered (Missing CloudWatch Alarms or SNS)  
+12. ♻️ **Auto Scaling** for Frontend/Backend  
 
 ---
 
@@ -30,7 +29,7 @@
 - **Container Registry**: Amazon ECR  
 - **Infrastructure**: AWS VPC, EKS, ALB, RDS  
 - **Monitoring**: CloudWatch, Prometheus, Grafana  
-- **Security**: WAF, Shield, GuardDuty, RBAC, Network Policies  
+- **Security**: WAF,SG RBAC, Network Policies  
 
 ---
 
@@ -96,9 +95,7 @@
 ### Security Enhancements
 
 - Use HTTPS for all communication via ALB  
-- Setup AWS WAF rules (SQL Injection, XSS, Rate limiting)  
-- Enable AWS GuardDuty for threat detection  
-- Use AWS Shield for DDoS protection  
+- Setup AWS WAF rules (SQL Injection, XSS, Rate limiting)   
 - Apply Kubernetes RBAC and Network Policies for internal cluster security  
 
 ---
@@ -106,9 +103,8 @@
 ### Optional Enhancements (Not in Base Setup)
 
 - Use AWS Secrets Manager for managing secrets securely  
-- Configure CloudWatch Alarms + SNS for alerts  
-- Automate infrastructure setup using Terraform or AWS CDK  
-- Use Argo Rollouts or Flagger for blue/green or canary deployments  
+- Configure CloudWatch Alarms + SNS for alerts ### not done
+- Automate infrastructure setup using Terraform 
 
 ---
 
@@ -117,7 +113,7 @@
 1. VPC Isolation (public and private subnets)  
 2. Security Groups and IAM Roles  
 3. SSL/TLS Termination at the Application Load Balancer (ALB)  
-4. AWS WAF + Shield Protection  
+4. AWS WAF 
 5. Database is Placed in a Private Subnet  
 6. EKS RBAC and Kubernetes Network Policies  
 7. CI/CD Secured with GitHub Secrets  
