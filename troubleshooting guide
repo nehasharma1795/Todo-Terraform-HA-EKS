@@ -146,3 +146,7 @@ export AWS_PAGER=""
 aws eks describe-cluster --name my-eks-cluster --region ap-south-1 --query "cluster.identity.oidc.issuer" --output text
 
 
+environment variable set
+C:\Users\nehasha6\Downloads\terraform setup\terraform_1.8.5_windows_386;C:\Users\nehasha6
+
+
