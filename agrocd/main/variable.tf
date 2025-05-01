@@ -34,17 +34,6 @@ variable "az2" {
   default = "ap-south-1b"
 }
 
-variable "db_username" {
-  description = "The database master username"
-  type        = string
-}
-
-variable "db_password" {
-  description = "The database master password"
-  type        = string
-  sensitive   = true
-}
-
 variable "ecr_backend_name" {
   description = "ECR repository name for backend"
   default     = "buddywise-backend"
