@@ -10,9 +10,9 @@ output "aws_region" {
 # ✅ Ensure var.aws_region is declared in your variables.tf.
 
 output "eks_cluster_name" {
-  value = aws_eks_cluster.main.name
+  value = my_eks_cluster.main.name
 }
-# ✅ Check that aws_eks_cluster.main is defined correctly.
+# ✅ Check that my_eks_cluster.main is defined correctly.
 
 output "ecr_backend_name" {
   value = aws_ecr_repository.backend.name
