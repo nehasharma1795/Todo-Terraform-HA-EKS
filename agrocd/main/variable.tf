@@ -34,6 +34,12 @@ variable "az2" {
   default = "ap-south-1b"
 }
 
+variable "db_username" {
+  description = "The database master username"
+  type        = string
+  sensitive   = true  # mark it as sensitive so it doesn't get logged
+}
+
 variable "db_password" {
   description = "The database master password"
   type        = string
