@@ -68,18 +68,4 @@ jobs:
       - name: Verify Ingress for Backend and Frontend
         run: |
           kubectl get ingress backend-ingress
-          kubectl get ingress frontend-ingress
-          
-      # Step 11: Monitor ALB logs (optional)
-      - name: Monitor AWS Load Balancer Controller logs (optional)
-        run: |
-          kubectl logs -n kube-system deployment/aws-load-balancer-controller
-          
-      # Step 12: Notify (example - Slack notification, optional)
-      - name: Send deployment success notification (optional)
-        uses: slackapi/slack-github-action@v1.0.0
-        with:
-          slack-token: ${{ secrets.SLACK_TOKEN }}
-          channel: '#deployments'
-          text: "Deployment to AWS ECR and Kubernetes has been successfully completed!"
-
+          kubectl get ingress frontend-ingress    
