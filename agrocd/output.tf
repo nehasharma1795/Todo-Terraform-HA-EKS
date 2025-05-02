@@ -9,9 +9,7 @@ output "aws_region" {
 }
 # ✅ Ensure var.aws_region is declared in your variables.tf.
 
-output "eks_cluster_name" {
-  value = my_eks_cluster.main.name
-}
+
 # ✅ Check that my_eks_cluster.main is defined correctly.
 
 output "ecr_backend_name" {
