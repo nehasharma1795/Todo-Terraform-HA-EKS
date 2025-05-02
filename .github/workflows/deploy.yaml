@@ -38,8 +38,13 @@ jobs:
         id: ecr-uris
         run: |
           ACCOUNT_ID=$(aws sts get-caller-identity --query Account --output text)
+          echo "ACCOUNT_ID=$ACCOUNT_ID" >> $GITHUB_ENV
           echo "BACKEND_IMAGE=${ACCOUNT_ID}.dkr.ecr.${AWS_REGION}.amazonaws.com/${BACKEND_ECR_REPO}" >> $GITHUB_ENV
           echo "FRONTEND_IMAGE=${ACCOUNT_ID}.dkr.ecr.${AWS_REGION}.amazonaws.com/${FRONTEND_ECR_REPO}" >> $GITHUB_ENV
+
+      - name: Update kubeconfig for EKS
+        run: |
+          aws eks update-kubeconfig --region ${{ env.AWS_REGION }} --name my-eks-cluster
 
       - name: Build and push backend image
         uses: docker/build-push-action@v5
