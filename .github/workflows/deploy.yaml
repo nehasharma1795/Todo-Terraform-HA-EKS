@@ -11,11 +11,9 @@ jobs:
     environment: production
 
     steps:
-      # Step 1: Checkout the code
       - name: Checkout Repository
         uses: actions/checkout@v2
 
-      # Step 2: Set up AWS credentials
       - name: Set up AWS credentials
         uses: aws-actions/configure-aws-credentials@v1
         with:
@@ -23,11 +21,9 @@ jobs:
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           aws-region: ${{ secrets.AWS_REGION }}
 
-      # Step 3: Set up Terraform CLI
       - name: Set up Terraform
         uses: hashicorp/setup-terraform@v2
 
-      # Step 4: Run Terraform from the agrocd directory
       - name: Apply Terraform and Get Outputs
         id: terraform_outputs
         run: |
@@ -40,37 +36,35 @@ jobs:
           echo "EKS_CLUSTER_NAME=$(terraform output -raw eks_cluster_name)" >> $GITHUB_ENV
         working-directory: ./agrocd
 
-      # Step 5: Configure kubeconfig for EKS
       - name: Configure kubeconfig
         run: |
           aws eks update-kubeconfig --region ${{ env.AWS_REGION }} --name ${{ env.EKS_CLUSTER_NAME }}
 
-      # Step 6: Authenticate Docker to AWS ECR
       - name: Authenticate Docker to AWS ECR
         run: |
           aws ecr get-login-password --region ${{ env.AWS_REGION }} | docker login --username AWS --password-stdin ${{ env.AWS_ACCOUNT_ID }}.dkr.ecr.${{ env.AWS_REGION }}.amazonaws.com
 
-      # Step 7: Build Docker image for Backend
+      - name: Set Docker Image Tags
+        run: |
+          IMAGE_TAG=latest-${{ github.sha }}
+          echo "IMAGE_TAG=$IMAGE_TAG" >> $GITHUB_ENV
+
       - name: Build Docker image for Backend
         run: |
-          docker build -t ${{ env.AWS_ACCOUNT_ID }}.dkr.ecr.${{ env.AWS_REGION }}.amazonaws.com/${{ env.ECR_BACKEND_NAME }}:latest ./backend
+          docker build -t ${{ env.AWS_ACCOUNT_ID }}.dkr.ecr.${{ env.AWS_REGION }}.amazonaws.com/${{ env.ECR_BACKEND_NAME }}:${{ env.IMAGE_TAG }} ./backend
 
-      # Step 8: Push Docker image to Backend ECR
       - name: Push Docker image to Backend ECR
         run: |
-          docker push ${{ env.AWS_ACCOUNT_ID }}.dkr.ecr.${{ env.AWS_REGION }}.amazonaws.com/${{ env.ECR_BACKEND_NAME }}:latest
+          docker push ${{ env.AWS_ACCOUNT_ID }}.dkr.ecr.${{ env.AWS_REGION }}.amazonaws.com/${{ env.ECR_BACKEND_NAME }}:${{ env.IMAGE_TAG }}
 
-      # Step 9: Build Docker image for Frontend
       - name: Build Docker image for Frontend
         run: |
-          docker build -t ${{ env.AWS_ACCOUNT_ID }}.dkr.ecr.${{ env.AWS_REGION }}.amazonaws.com/${{ env.ECR_FRONTEND_NAME }}:latest ./frontend
+          docker build -t ${{ env.AWS_ACCOUNT_ID }}.dkr.ecr.${{ env.AWS_REGION }}.amazonaws.com/${{ env.ECR_FRONTEND_NAME }}:${{ env.IMAGE_TAG }} ./frontend
 
-      # Step 10: Push Docker image to Frontend ECR
       - name: Push Docker image to Frontend ECR
         run: |
-          docker push ${{ env.AWS_ACCOUNT_ID }}.dkr.ecr.${{ env.AWS_REGION }}.amazonaws.com/${{ env.ECR_FRONTEND_NAME }}:latest
+          docker push ${{ env.AWS_ACCOUNT_ID }}.dkr.ecr.${{ env.AWS_REGION }}.amazonaws.com/${{ env.ECR_FRONTEND_NAME }}:${{ env.IMAGE_TAG }}
 
-      # Step 11: Deploy ArgoCD
       - name: Deploy ArgoCD
         run: |
           helm repo add argo https://argoproj.github.io/argo-helm
@@ -82,13 +76,11 @@ jobs:
             --set server.ingress.enabled=true \
             --set server.ingress.hosts[0]=argocd.${{ env.AWS_REGION }}.amazonaws.com
 
-      # Step 12: Verify Ingress
       - name: Verify Ingress for Backend and Frontend
         run: |
           kubectl get ingress backend-ingress || echo "Backend ingress not found"
           kubectl get ingress frontend-ingress || echo "Frontend ingress not found"
 
-      # Step 13: Monitor ALB logs
       - name: Monitor AWS Load Balancer logs
         run: |
           kubectl logs -n kube-system deployment/aws-load-balancer-controller || echo "No logs found"
