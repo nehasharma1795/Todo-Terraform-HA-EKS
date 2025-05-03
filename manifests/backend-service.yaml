@@ -8,5 +8,5 @@ spec:
     app: backend
   ports:
     - protocol: TCP
-      port: 80          # Must match the port in the Ingress definition
-      targetPort: 8080  # Or whatever your container actually listens on
+      port: 80             # Required for Ingress
+      targetPort: 8080     # Match the port in your backend Deployment/Pod
