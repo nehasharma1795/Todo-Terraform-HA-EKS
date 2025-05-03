@@ -9,4 +9,4 @@ spec:
   ports:
     - protocol: TCP
       port: 80             # Required for Ingress
-      targetPort: 8080     # Match the port in your backend Deployment/Pod
+      targetPort: 8000     # Match the port in your backend Deployment/Pod
