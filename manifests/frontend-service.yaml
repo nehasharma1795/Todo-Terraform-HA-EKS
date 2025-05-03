@@ -8,5 +8,5 @@ spec:
     app: frontend
   ports:
     - protocol: TCP
-      port: 80
-      targetPort: 3000  # Adjust if your app uses a different port
+      port: 80             # Required for Ingress
+      targetPort: 3000     # Match the port in your frontend Deployment/Pod
