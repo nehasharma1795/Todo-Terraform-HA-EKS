@@ -4,10 +4,9 @@ metadata:
   name: frontend-service
 spec:
   selector:
-    app: frontend-deployment
+    app: frontend  # Ensure this matches the frontend pod label
   ports:
-    - protocol: TCP
-      port: 80
-      targetPort: 80
-  type: LoadBalancer  # This exposes the service externally
+    - port: 80
+      targetPort: 3000  # Port of the frontend container
+  type: LoadBalancer
 
