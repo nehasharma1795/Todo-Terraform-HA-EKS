@@ -36,4 +36,6 @@ spec:
     - ReadWriteOnce
   resources:
     requests:
-      storage: 1Gi  # Size of the persistent volume, adjust as needed
+      storage: 1Gi # Size of the persistent volume, adjust as needed
+  storageClassName: manual
+
