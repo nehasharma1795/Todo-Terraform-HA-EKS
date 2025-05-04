@@ -4,9 +4,8 @@ metadata:
   name: backend-service
 spec:
   selector:
-    app: backend-deployment
+    app: backend  # Ensure this matches the backend pod label
   ports:
-    - protocol: TCP
-      port: 80
-      targetPort: 8000
-  type: LoadBalancer  # This exposes the service externally
+    - port: 80
+      targetPort: 8000  # Port of the backend container
+  type: LoadBalancer
