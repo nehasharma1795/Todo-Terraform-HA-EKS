@@ -19,3 +19,21 @@ spec:
         image: 239044943724.dkr.ecr.ap-south-1.amazonaws.com/todo-backend:latest
         ports:
         - containerPort: 8000
+        volumeMounts:
+        - name: backend-storage
+          mountPath: /app/data  # Update this path to where SQLite DB is saved
+      volumes:
+      - name: backend-storage
+        persistentVolumeClaim:
+          claimName: backend-pvc
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: backend-pvc
+spec:
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 1Gi  # Size of the persistent volume, adjust as needed
