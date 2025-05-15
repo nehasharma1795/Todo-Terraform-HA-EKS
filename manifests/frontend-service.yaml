@@ -8,5 +8,5 @@ spec:
   ports:
     - port: 80
       targetPort: 3000  # Port of the frontend container
-  type: LoadBalancer
+  type: ClusterIP  # Change this to ClusterIP
 
