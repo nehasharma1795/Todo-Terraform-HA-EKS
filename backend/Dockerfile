@@ -1,6 +1,9 @@
 # Use Python as the base image
 FROM python:3.10
 
+# Install bash shell
+RUN apt-get update && apt-get install -y bash
+
 # Set the working directory inside the container
 WORKDIR /app
 
